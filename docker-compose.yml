@@ -1,0 +1,64 @@
+services:
+
+  mysqldb:
+    image: mysql:8.0
+    container_name: voyager-mysql-container-fresh
+    environment:
+      - MYSQL_USER=voyager2024
+      - MYSQL_ROOT_PASSWORD=voyager2024
+      - MYSQL_PASSWORD=voyager2024      
+      - MYSQL_DATABASE=voyager_rovers     
+    ports:
+      - 3306:3306
+     
+    networks:
+      - backend  
+    restart: always    
+
+  backend:
+    depends_on:
+      - mysqldb
+    build: ./backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules         
+    networks:
+      - backend 
+    restart: always
+
+  frontend:
+    build: ./frontend/vue-rovers
+    ports:
+      - "5173:5173"     
+    volumes:
+      - ./frontend/vue-rovers:/app
+      - /app/node_modules
+    restart: always
+
+volumes: 
+  db:
+
+networks:
+  backend:
+    
+
+
+  
+    
+  
+
+   
+
+ 
+
+
+
+
+ 
+
+ 
+
+ 
+     
