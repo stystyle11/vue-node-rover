@@ -33,4 +33,4 @@ app.listen(port, () => {
 
 // Docker wait for it script is taking too long to debug
 //for Testing purposes this workaround is faster.
-setTimeout(startServer, 2500)
+setTimeout(startServer, 12500)

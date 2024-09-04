@@ -1,6 +1,7 @@
 import { Router } from 'express';
-import PositionController from '../controllers/PositionController.js';
 import { body, param } from 'express-validator';
+import PositionController from '../controllers/PositionController.js';
+
 import { validate } from '../middleware/validation.js';
 const router = Router();
 
