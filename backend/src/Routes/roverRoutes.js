@@ -9,6 +9,7 @@ const router = Router();
  */ 
 
 router.post('/rovers',
+    
     [
         body('name').isString().notEmpty(),
         body('color').isString().notEmpty(),
@@ -17,10 +18,11 @@ router.post('/rovers',
     RoverController.createRover);
 
 router.put('/rovers/:id',  
+
     [
-            param('id').isInt(),
-            body('name').isString().optional(),
-            body('color').isString().optional(),
+        param('id').isInt(),
+        body('name').isString().optional(),
+        body('color').isString().optional(),
     ],
     
     RoverController.updateRover);   
@@ -32,6 +34,7 @@ router.put('/rovers/:id',
 router.get('/rovers', RoverController.getAllRovers);
 
 router.get('/rovers/:id',
+
     [param('id').isInt()],
     
     RoverController.getRoverById);
@@ -41,6 +44,7 @@ router.get('/rovers/:id',
  */ 
 
 router.delete('/rovers/:id', 
+
     [param('id').isInt()],
     
     RoverController.deleteRover);
