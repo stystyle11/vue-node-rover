@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import RoverController from '../Controllers/RoverController.js';
+import RoverController from '../controllers/RoverController.js';
 import { body, param } from 'express-validator';
-
+import { validate } from '../middleware/validation.js';
 const router = Router();
 
 /**
@@ -14,6 +14,7 @@ router.post('/rovers',
         body('name').isString().notEmpty(),
         body('color').isString().notEmpty(),
     ],
+    validate,
     
     RoverController.createRover);
 
@@ -24,6 +25,7 @@ router.put('/rovers/:id',
         body('name').isString().optional(),
         body('color').isString().optional(),
     ],
+    validate,
     
     RoverController.updateRover);   
 

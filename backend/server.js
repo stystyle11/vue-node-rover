@@ -1,7 +1,7 @@
 import express from 'express';
 import { connectToDatabase } from './initializeDatabase.js';
-import roverRoutes from './src/Routes/roverRoutes.js';
-import positionRoutes from './src/Routes/positionRoutes.js';
+import roverRoutes from './src/routes/RoverRoutes.js';
+import positionRoutes from './src/routes/PositionRoutes.js';
 
 
 

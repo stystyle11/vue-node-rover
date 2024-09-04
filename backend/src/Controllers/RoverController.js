@@ -1,4 +1,4 @@
-import Rover from '../models/Rover.js';
+import Rover from '../models/rover.js';
 
 class RoverController {
   // Create a new rover

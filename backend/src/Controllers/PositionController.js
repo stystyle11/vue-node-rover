@@ -1,4 +1,4 @@
-import Position from '../models/Position.js';
+import Position from '../models/position.js';
 
 class PositionController {
   // Create a new position for a specific rover

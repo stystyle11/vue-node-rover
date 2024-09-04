@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import PositionController from '../Controllers/PositionController.js';
+import PositionController from '../controllers/PositionController.js';
 import { body, param } from 'express-validator';
-
+import { validate } from '../middleware/validation.js';
 const router = Router();
 
 /**
@@ -16,6 +16,7 @@ router.post('/rovers/:rover_id/positions',
         body('coordinate_y').isInt(),
         body('position_facing').isString().notEmpty(),
     ],
+    validate,
         
     PositionController.createPosition);
 
@@ -27,6 +28,7 @@ router.put('/positions/:id',
         body('coordinate_y').isInt().optional(),
         body('position_facing').isString().optional(),
     ],
+    validate,
     
     PositionController.updatePosition);
 
