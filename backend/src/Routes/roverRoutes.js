@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { body, param } from 'express-validator';
 import RoverController from '../controllers/RoverController.js';
-
 import { validate } from '../middleware/validation.js';
+
 const router = Router();
 
 /**
