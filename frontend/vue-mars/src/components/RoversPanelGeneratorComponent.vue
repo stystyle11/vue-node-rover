@@ -8,15 +8,12 @@
       :landingPosition="field.landingPosition"
       :instructionsPosition="field.instructionsPosition"
       :placeholder="field.placeholder"
-      :labelRoverInstructions="field.labelRoverInstructions"
-      :labelLandingPosition="field.labelLandingPosition"
     />
   </div>
 </template>
 <script setup>
 import { defineAsyncComponent } from 'vue';
-//:variant="field.variant ? field.variant : 'filled'"
-//:onDataUpdated="field.handleDataUpdate"
+
 defineProps({
   fields: {
     type: Array,

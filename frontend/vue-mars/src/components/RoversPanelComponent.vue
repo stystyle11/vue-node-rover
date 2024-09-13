@@ -1,49 +1,49 @@
 <template>
-  <div>
-    <h1>Rover Panel:{{ name }}</h1>
+  <button
+    class="w-fit h-fit border-2 border-white-600 rounded-md p-1 m-1 bg-blue-900"
+    @click="getFinalPosition(roverInstructionsModel)"
+    >mama</button
+  >
+  {{ roverInstructionsModel }}
+  <form
+    class="w-fit h-fit border-2 border-white-600 rounded-md p-12 m-12 bg-blue-900"
+  >
+    <h1 class="p-4 m-4 h-16 w-80">Rover Panel:{{ nameModel }}</h1>
+    <div>
+      <span class="p-2 m-0 h-fit w-80">Landing Position:</span>
+      <input
+        class="border border-gray-300 p-2 m-2 h-fit w-80"
+        v-model="landingPositionModel"
+        type="text"
+        :maxlength="maxlength"
+        :disabled="false"
+        :autofocus="true"
+        @focus="handleFocus"
+      />
+    </div>
+    <div>
+      <span class="p-2 m-0 h-16 w-80">Instructions:</span>
+      <input
+        class="border border-gray-300 p-2 m-2 h-fit w-80"
+        v-model="roverInstructionsModel"
+        type="text"
+        :maxlength="maxlength"
+        :disabled="false"
+        :autofocus="true"
+        @focus="handleFocus"
+      />
+    </div>
+    <div class="p-2 m-0 h-16 w-80"> Direction:{{ finalPosition }}</div>
 
-    <h5>Rover instructionModel:{{ roverInstructionsModel }}</h5>
-    <h5>Landing Position:{{ landingPositionModel }}</h5>
-    <input
-      v-model="landingPositionModel"
-      @input="handleInput"
-      type="text"
-      :maxlength="maxlength"
-      :disabled="false"
-      :autofocus="true"
-      @blur="handleBlur"
-      @focus="handleFocus"
-    />
-    <input
-      v-model="roverInstructionsModel"
-      @input="handleInput"
-      type="text"
-      :maxlength="maxlength"
-      :disabled="false"
-      :autofocus="true"
-      @blur="handleBlur"
-      @focus="handleFocus"
-    />
-    Direction:{{ heading }}
-    <!-- 
-    <InputBaseComponent
-      :modelValueFromParent="roverInstructionsModel"
-      type="text"
-      :maxlength="maxlength"
-      :label="labelRoverInstructions"
-      :disabled="false"
-      :autofocus="true"
-      @blur="onBlur"
-      @focus="onFocus"
-    />
-    -->
-    <ButtonBaseComponent @click="handleClick">Submit</ButtonBaseComponent>
-  </div>
+    <ButtonBaseComponent class="border border-gray-300 p-2 m-2 h-fit w-80"
+      >Submit</ButtonBaseComponent
+    >
+  </form>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
-//import InputBaseComponent from '@/components/InputBaseComponent.vue';
+
 import ButtonBaseComponent from '@/components/ButtonBaseComponent.vue';
 
 const props = defineProps({
@@ -51,10 +51,11 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  placeholder: {
+    type: String,
+  },
   landingPosition: {
-    type: Object,
-
-    default: () => ({ x: 0, y: 0, heading: 'N' }),
+    type: Array,
   },
   instructionsPosition: {
     type: Array,
@@ -62,14 +63,16 @@ const props = defineProps({
 });
 
 const maxlength = 15;
+const nameModel = ref(props.name);
 const landingPositionModel = ref(props.landingPosition);
 const roverInstructionsModel = ref(props.instructionsPosition);
-const finalPosition = ref('');
-const movingPosition = ref('');
+
+const finalPosition = ref(null);
+const movingPosition = ref(null);
 
 // Computed HEading
 const computedHeading = computed(() => {
-  if (finalPosition.value.length > 0) {
+  if (finalPosition.value !== null) {
     return finalPosition.value[2];
   } else {
     return landingPositionModel.value[2];
@@ -92,21 +95,31 @@ const headingToNumber = (headingString) => {
       return 0;
   }
 };
-const headingNumber = headingToNumber(heading);
+let headingNumber = headingToNumber(heading);
 
 const calculateHeading = (inputString) => {
+  let tempNumber;
   if (inputString === 'L') {
-    headingNumber.value = headingNumber - 90;
+    //console.log('heading BEFORE number', headingNumber);
+    tempNumber = headingNumber - 90;
+    tempNumber > 270
+      ? (headingNumber = 0)
+      : tempNumber < 0
+        ? (headingNumber = 270)
+        : (headingNumber = tempNumber);
+    //console.log('heading AFTER L', headingNumber);
   } else {
-    headingNumber.value = headingNumber + 90;
+    tempNumber = headingNumber + 90;
+    tempNumber > 270
+      ? (headingNumber = 0)
+      : tempNumber < 0
+        ? (headingNumber = 270)
+        : (headingNumber = tempNumber);
+    // console.log('heading AFTER R', headingNumber);
   }
-  headingNumber.value > 270
-    ? 0
-    : headingNumber.value < 0
-      ? 270
-      : headingNumber.value;
 
-  switch (headingNumber.value) {
+  // console.log('heading final number', headingNumber);
+  switch (headingNumber) {
     case 0:
       return 'N';
     case 90:
@@ -120,7 +133,8 @@ const calculateHeading = (inputString) => {
   }
 };
 const calculateMovingForward = (headingString) => {
-  switch (headingString.value) {
+  //console.log('heading strig for calculate moving Foward', headingString);
+  switch (headingString) {
     case 'N':
       return ['x', 'y1', 'N'];
     case 'E':
@@ -133,47 +147,101 @@ const calculateMovingForward = (headingString) => {
       return ['x', 'y', 'N'];
   }
 };
-const updatePositions = (oldPosition, newPosition) => {
-  let xSum =
-    parseInt(oldPosition[0].replace('x', '')) +
-    parseInt(newPosition[0].replace('x', ''));
-  let ySum =
-    parseInt(oldPosition[1].replace('y', '')) +
-    parseInt(newPosition[1].replace('y', ''));
+const extractNumber = (str, prefix) => {
+  if (str.startsWith(prefix)) {
+    let num = str.replace(prefix, '');
 
-  return [`x${xSum}`, `y${ySum}`, newPosition[2]];
+    return num === '' ? '' : parseInt(num);
+  }
 };
-const createArrayFromInstructionString = (instructionsString, stringSize) => {
-  const instructionsArray = [];
-
-  for (let i = 0; i < instructionsString.length; i += stringSize) {
-    instructionsArray.push(instructionsString.substring(i, i + stringSize));
+const updatePositions = (oldPosition, newPosition) => {
+  if (oldPosition === null) {
+    oldPosition = ['x', 'y', 'N'];
   }
 
-  return instructionsArray;
-};
-const finalArrayInstructions = createArrayFromInstructionString(
-  roverInstructionsModel,
-);
-const getFinalPosition = (instructionsStringArray) => {
-  instructionsStringArray.forEach((string) => {
-    let currentHeading;
-    let currentPosition;
+  let result = [];
 
-    if (string === 'L' || string === 'M') {
-      currentHeading = calculateHeading(string);
+  let xSum =
+    extractNumber(oldPosition[0], 'x') + extractNumber(newPosition[0], 'x');
+
+  if (xSum === 0) {
+    xSum = '';
+  }
+  result.push(`x${xSum}`);
+
+  let ySum =
+    extractNumber(oldPosition[1], 'y') + extractNumber(newPosition[1], 'y');
+
+  if (ySum === 0) {
+    ySum = '';
+  }
+  result.push(`y${ySum}`);
+
+  result.push(newPosition[2]);
+
+  return result;
+};
+const createArrayFromInstructionString = (instructionsString) => {
+  console.log(instructionsString);
+  return instructionsString.flatMap((str) => str.split(''));
+};
+
+const getFinalPosition = (instructionsStringArray) => {
+  console.log('instruction', instructionsStringArray);
+  //let mama = createArrayFromInstructionString(instructionsStringArray);
+  let currentHeading;
+  let currentPosition;
+  let curatedString;
+  curatedString = createArrayFromInstructionString(instructionsStringArray);
+
+  console.log('curated', curatedString);
+  curatedString.forEach((item) => {
+    console.log(item[0]);
+    if (item === 'L' || item === 'R') {
+      currentHeading = calculateHeading(item);
     } else {
       currentPosition = calculateMovingForward(currentHeading);
+      movingPosition.value = updatePositions(
+        movingPosition.value,
+        currentPosition,
+      );
+      console.log('moving position AFTER update', movingPosition.value);
     }
-    movingPosition.value = updatePositions(
-      movingPosition.value,
-      currentPosition,
-    );
   });
-  finalPosition.value = updatePositions(
-    landingPositionModel.value,
-    movingPosition.value,
-  );
+  //Needs an If for current Position
+  //movingPosition.value = updatePositions(movingPosition.value, currentPosition);
+  console.log('moving position AFTERREEEEEEEEEACH', movingPosition.value);
+
+  if (finalPosition.value === null) {
+    finalPosition.value = updatePositions(
+      landingPositionModel.value,
+      movingPosition.value,
+    );
+    movingPosition.value = null;
+  } else {
+    finalPosition.value = updatePositions(
+      finalPosition.value,
+      movingPosition.value,
+    );
+    movingPosition.value = null;
+  }
+
+  console.log('Final Position', finalPosition.value);
+};
+//getFinalPosition(finalArrayInstructions);
+const handleInput = (model) => {
+  const validInputs = ['L', 'M', 'R'];
+  let inputValue;
+  if (model.value) {
+    inputValue = model.value.toUpperCase();
+  }
+
+  if (!validInputs.includes(inputValue)) {
+    model.value = '';
+  } else {
+    model.value = inputValue;
+    console.log('Valid input:', model.value);
+  }
 };
 
 const onBlur = () => {
@@ -184,7 +252,5 @@ const onFocus = () => {
   console.log('Input focused');
 };
 
-const handleClick = () => {
-  console.log(`Button clicked, input value: ${inputValue.value}`);
-};
+const handleClick = () => {};
 </script>
