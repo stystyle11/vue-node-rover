@@ -16,7 +16,7 @@ const roverGeneratorFields = [
   {
     name: 'Rover1',
     landingPosition: ['x', 'y', 'N'],
-    instructionsPosition: ['LMRRMMRMMML'],
+    instructionsPosition: 'LMRRMMRMMML',
     placeholder: 'Rover1',
     labelRoverInstructions: 'Rover Instructions',
     labelLandingPosition: 'Landing Position',
@@ -25,7 +25,7 @@ const roverGeneratorFields = [
   {
     name: 'Rover1',
     landingPosition: ['x', 'y', 'S'],
-    instructionsPosition: ['LM'],
+    instructionsPosition: 'LM',
     placeholder: 'Rover1',
     labelRoverInstructions: 'Rover Instructions',
     labelLandingPosition: 'Landing Position',

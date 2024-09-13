@@ -4,7 +4,7 @@
     @click="getFinalPosition(roverInstructionsModel)"
     >mama</button
   >
-  {{ roverInstructionsModel }}
+
   <form
     class="w-fit h-fit border-2 border-white-600 rounded-md p-12 m-12 bg-blue-900"
   >
@@ -58,7 +58,7 @@ const props = defineProps({
     type: Array,
   },
   instructionsPosition: {
-    type: Array,
+    type: String,
   },
 });
 
@@ -182,8 +182,9 @@ const updatePositions = (oldPosition, newPosition) => {
   return result;
 };
 const createArrayFromInstructionString = (instructionsString) => {
-  console.log(instructionsString);
-  return instructionsString.flatMap((str) => str.split(''));
+  let foTransudo = instructionsString;
+  console.log(typeof foTransudo);
+  return foTransudo.split('');
 };
 
 const getFinalPosition = (instructionsStringArray) => {
