@@ -1,25 +1,40 @@
 <template>
+  <!--
   <button
     class="w-fit h-fit border-2 border-white-600 rounded-md p-1 m-1 bg-blue-900"
     @click="getFinalPosition(roverInstructionsModel)"
     >mama</button
   >
-
+-->
   <form
     class="w-fit h-fit border-2 border-white-600 rounded-md p-12 m-12 bg-blue-900"
   >
     <h1 class="p-4 m-4 h-16 w-80">Rover Panel:{{ nameModel }}</h1>
     <div>
-      <span class="p-2 m-0 h-fit w-80">Landing Position:</span>
+      <label for="inputX">Input X:</label>
       <input
-        class="border border-gray-300 p-2 m-2 h-fit w-80"
-        v-model="landingPositionModel"
-        type="text"
-        :maxlength="maxlength"
-        :disabled="false"
-        :autofocus="true"
-        @focus="handleFocus"
+        id="inputX"
+        v-model.number="inputX"
+        type="number"
       />
+
+      <label for="inputY">Input Y:</label>
+      <input
+        id="inputY"
+        v-model.number="inputY"
+        type="number"
+      />
+
+      <label for="inputN">Input N:</label>
+      <input
+        id="inputN"
+        v-model="inputN"
+        type="text"
+      />
+
+      <div>
+        <p>Computed Array: {{ computedArrayHeading }}</p>
+      </div>
     </div>
     <div>
       <span class="p-2 m-0 h-16 w-80">Instructions:</span>
@@ -33,7 +48,7 @@
         @focus="handleFocus"
       />
     </div>
-    <div class="p-2 m-0 h-16 w-80"> Direction:{{ finalPosition }}</div>
+    <div class="p-2 m-0 h-16 w-80"> Final Position:{{ finalPosition }}</div>
 
     <ButtonBaseComponent class="border border-gray-300 p-2 m-2 h-fit w-80"
       >Submit</ButtonBaseComponent
@@ -46,6 +61,7 @@ import { ref, computed } from 'vue';
 
 import ButtonBaseComponent from '@/components/ButtonBaseComponent.vue';
 
+// PROPS
 const props = defineProps({
   name: {
     type: String,
@@ -54,33 +70,53 @@ const props = defineProps({
   placeholder: {
     type: String,
   },
-  landingPosition: {
-    type: Array,
+  landingPositionX: {
+    type: Number,
+  },
+  landingPositionY: {
+    type: Number,
+  },
+  landingPositionN: {
+    type: String,
   },
   instructionsPosition: {
     type: String,
   },
 });
 
+const inputX = ref(props.landingPositionX);
+const inputY = ref(props.landingPositionY);
+const inputN = ref(props.landingPositionN);
+
 const maxlength = 15;
 const nameModel = ref(props.name);
-const landingPositionModel = ref(props.landingPosition);
+//const landingPositionModel = ref(props.landingPosition);
 const roverInstructionsModel = ref(props.instructionsPosition);
 
 const finalPosition = ref(null);
 const movingPosition = ref(null);
+
+// Get the Heading of the Rover
+
+const createArrayFromInstructionString = (instructionsString) => {
+  console.log('instructionString', instructionsString);
+  let stringToArray = instructionsString.toUpperCase();
+
+  return stringToArray.split('');
+};
 
 // Computed HEading
 const computedHeading = computed(() => {
   if (finalPosition.value !== null) {
     return finalPosition.value[2];
   } else {
-    return landingPositionModel.value[2];
+    return computedArrayHeading.value[2];
   }
 });
-// Get the Heading of the Rover
+const computedArrayHeading = computed(() => {
+  return [inputX.value, inputY.value, inputN.value];
+});
 const heading = computedHeading.value;
-
 const headingToNumber = (headingString) => {
   switch (headingString) {
     case 'N':
@@ -136,100 +172,96 @@ const calculateMovingForward = (headingString) => {
   //console.log('heading strig for calculate moving Foward', headingString);
   switch (headingString) {
     case 'N':
-      return ['x', 'y1', 'N'];
+      return [0, 1, 'N'];
     case 'E':
-      return ['x1', 'y', 'E'];
+      return [1, 0, 'E'];
     case 'S':
-      return ['x', 'y-1', 'S'];
+      return [0, -1, 'S'];
     case 'W':
-      return ['x-1', 'y', 'W'];
+      return [-1, 0, 'W'];
     default:
-      return ['x', 'y', 'N'];
+      return [0, 0, 'N'];
   }
 };
-const extractNumber = (str, prefix) => {
-  if (str.startsWith(prefix)) {
-    let num = str.replace(prefix, '');
 
-    return num === '' ? '' : parseInt(num);
-  }
-};
 const updatePositions = (oldPosition, newPosition) => {
+  console.log('old position:', oldPosition);
   if (oldPosition === null) {
-    oldPosition = ['x', 'y', 'N'];
+    oldPosition = [0, 0, 'N'];
   }
 
   let result = [];
 
-  let xSum =
-    extractNumber(oldPosition[0], 'x') + extractNumber(newPosition[0], 'x');
+  let xSum = oldPosition[0] + newPosition[0];
+  console.log('posicoes da soma:', oldPosition, newPosition);
+  console.log('resultado some xx', xSum);
+  result.push(xSum);
 
-  if (xSum === 0) {
-    xSum = '';
-  }
-  result.push(`x${xSum}`);
-
-  let ySum =
-    extractNumber(oldPosition[1], 'y') + extractNumber(newPosition[1], 'y');
-
-  if (ySum === 0) {
-    ySum = '';
-  }
-  result.push(`y${ySum}`);
+  let ySum = oldPosition[1] + newPosition[1];
+  console.log('resultado some y', ySum);
+  result.push(ySum);
 
   result.push(newPosition[2]);
-
+  console.log('resultado  update positiuon function', result);
   return result;
-};
-const createArrayFromInstructionString = (instructionsString) => {
-  let foTransudo = instructionsString;
-  console.log(typeof foTransudo);
-  return foTransudo.split('');
 };
 
 const getFinalPosition = (instructionsStringArray) => {
-  console.log('instruction', instructionsStringArray);
-  //let mama = createArrayFromInstructionString(instructionsStringArray);
   let currentHeading;
   let currentPosition;
-  let curatedString;
-  curatedString = createArrayFromInstructionString(instructionsStringArray);
 
-  console.log('curated', curatedString);
-  curatedString.forEach((item) => {
-    console.log(item[0]);
+  let instructionStringToArray;
+
+  instructionStringToArray = createArrayFromInstructionString(
+    instructionsStringArray,
+  );
+
+  instructionStringToArray.forEach((item) => {
+    // console.log(item[0]);
     if (item === 'L' || item === 'R') {
       currentHeading = calculateHeading(item);
     } else {
-      currentPosition = calculateMovingForward(currentHeading);
+      // returns lik [1,0,S]
+      currentPosition = calculateMovingForward(
+        currentHeading ?? computedArrayHeading.value[2],
+      );
+      // console.log('BWEFORE CURRENT', currentPosition);
       movingPosition.value = updatePositions(
-        movingPosition.value,
+        movingPosition.value ?? [0, 0, 'N'],
         currentPosition,
       );
-      console.log('moving position AFTER update', movingPosition.value);
+      // console.log('AFTERcurent', currentPosition);
     }
   });
-  //Needs an If for current Position
-  //movingPosition.value = updatePositions(movingPosition.value, currentPosition);
-  console.log('moving position AFTERREEEEEEEEEACH', movingPosition.value);
+
+  //console.log('moving position AFTERREEEEEEEEEACH', movingPosition.value);
 
   if (finalPosition.value === null) {
+    // console.log('FinalPositionBefore', finalPosition.value);
+    // console.log('CompuitedArrayLandingBefore', computedArrayHeading.value);
+    // finalPosition.value = movingPosition.value;
+
     finalPosition.value = updatePositions(
-      landingPositionModel.value,
+      computedArrayHeading.value,
       movingPosition.value,
     );
+
+    //console.log('CompuitedArrayLandingafter', computedArrayHeading.value);
+    // console.log('FinalPositionAfter', finalPosition.value);
     movingPosition.value = null;
   } else {
+    // console.log('FinalPositionBeforeNotNull', finalPosition.value);
     finalPosition.value = updatePositions(
       finalPosition.value,
       movingPosition.value,
     );
+    // console.log('FinalPositionAfterNotNull', finalPosition.value);
     movingPosition.value = null;
   }
 
-  console.log('Final Position', finalPosition.value);
+  //console.log('Final Position', finalPosition.value);
 };
-//getFinalPosition(finalArrayInstructions);
+
 const handleInput = (model) => {
   const validInputs = ['L', 'M', 'R'];
   let inputValue;

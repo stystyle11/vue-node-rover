@@ -5,7 +5,9 @@
       :key="field.name"
       :name="field.name"
       :is="renderComponentsArray[field.component]"
-      :landingPosition="field.landingPosition"
+      :landingPositionX="field.landingPositionX"
+      :landingPositionY="field.landingPositionY"
+      :landingPositionN="field.landingPositionN"
       :instructionsPosition="field.instructionsPosition"
       :placeholder="field.placeholder"
     />

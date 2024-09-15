@@ -15,7 +15,9 @@ import RoversPanelGenerator from '@/components/RoversPanelGeneratorComponent.vue
 const roverGeneratorFields = [
   {
     name: 'Rover1',
-    landingPosition: ['x', 'y', 'N'],
+    landingPositionX: 0,
+    landingPositionY: 0,
+    landingPositionN: 'N',
     instructionsPosition: 'LMRRMMRMMML',
     placeholder: 'Rover1',
     labelRoverInstructions: 'Rover Instructions',
@@ -24,7 +26,9 @@ const roverGeneratorFields = [
   },
   {
     name: 'Rover1',
-    landingPosition: ['x', 'y', 'S'],
+    landingPositionX: 0,
+    landingPositionY: 0,
+    landingPositionN: 'N',
     instructionsPosition: 'LM',
     placeholder: 'Rover1',
     labelRoverInstructions: 'Rover Instructions',
