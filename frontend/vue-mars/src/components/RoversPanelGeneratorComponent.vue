@@ -4,6 +4,7 @@
       v-for="field in fields"
       :key="field.name"
       :name="field.name"
+      :class="field.class"
       :is="renderComponentsArray[field.component]"
       :landingPositionX="field.landingPositionX"
       :landingPositionY="field.landingPositionY"

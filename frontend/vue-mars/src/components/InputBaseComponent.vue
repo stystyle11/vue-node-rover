@@ -1,30 +1,41 @@
 <template>
-  <div>
-    <label v-if="label">{{ label }}</label>
-    <input
-      v-model="getValueFromParent"
-      @input="handleInput"
-      :type="type"
-      :maxlength="maxlength"
-      :disabled="disabled"
-      :autofocus="autofocus"
-      @blur="handleBlur"
-      @focus="handleFocus"
-    />
-  </div>
+  <label v-if="label">{{ label }}</label>
+  <input
+    :class="classFromParent"
+    v-model="getValueFromParent"
+    @input="handleInput"
+    :type="type"
+    :placeholder="placeholder"
+    :maxlength="maxlength"
+    :disabled="disabled"
+    :autofocus="autofocus"
+    @change="emitEvent"
+    @blur="handleBlur"
+    @focus="handleFocus"
+  />
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref } from 'vue';
+import { ref } from 'vue';
+
+// Define the emit function for the component
 
 const props = defineProps({
   modelValueFromParent: {
+    type: Number,
+  },
+  id: {
     type: String,
-    required: true,
+  },
+  class: {
+    type: String,
+  },
+  placeholder: {
+    type: String,
   },
   type: {
     type: String,
-    default: 'text',
+    required: true,
   },
   maxlength: {
     type: Number,
@@ -44,26 +55,10 @@ const props = defineProps({
   },
 });
 const getValueFromParent = ref(props.modelValueFromParent);
-
-const emit = defineEmits(['update:modelValue', 'blur', 'focus']);
-
-const allowedLetters = ['E', 'W', 'N', 'S', 'L', 'M'];
-
-const handleInput = (event) => {
-  const filteredValue = event.target.value
-    .toUpperCase()
-    .split('')
-    .filter((char) => allowedLetters.includes(char))
-    .join('');
-
-  emit('update:modelValue', filteredValue);
-};
-
-const handleBlur = (event) => {
-  emit('blur', event);
-};
-
-const handleFocus = (event) => {
-  emit('focus', event);
-};
+const classFromParent = ref(props.class);
+const emit = defineEmits(['updateModelValue', 'blur', 'focus']);
+// A method to emit an event
+function emitEvent() {
+  emit('updateModelValue', getValueFromParent);
+}
 </script>
