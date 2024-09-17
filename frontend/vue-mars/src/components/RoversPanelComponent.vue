@@ -161,7 +161,9 @@ const validateErrorMessages = () => {
 };
 
 const modelsToBeChecked = [inputX, inputY, inputN, roverInstructionsModel];
+
 const idsToBeChecked = ['inputX', 'inputY', 'inputN', 'roverInstructionsModel'];
+
 const validateVmodelsNotEmpty = () => {
   modelsToBeChecked.map((item, index) => {
     if (index < idsToBeChecked.length) {
@@ -174,6 +176,10 @@ const isDisabled = ref(false);
 
 const validateForm = () => {
   validateVmodelsNotEmpty();
+
+  // Check Watch function that disables on submit
+  validateInstructions(roverInstructionsModel.value);
+
   let noErrors = validateErrorMessages();
 
   if (noErrors) {
