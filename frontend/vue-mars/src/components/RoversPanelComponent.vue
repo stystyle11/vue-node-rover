@@ -5,6 +5,7 @@
     <form class="w-fit h-fit border-2 border-white-600 rounded-md p-12 m-12 bg-blue-900">
       <div class="flex space-x-4 p-2 mt-2 w-full mb-2 h-28">
         <!-- inputX-->
+
         <div class="w-[30%] h-fit">
           <label for="inputX">Input X:</label>
           <input
@@ -20,7 +21,9 @@
           />
           <span class="p-2 m-1 text-red-800">{{ errors.inputX }}</span>
         </div>
+
         <!-- Input Y-->
+
         <div class="w-[30%] h-fit">
           <label for="inputY">Input Y:</label>
           <input
@@ -36,7 +39,9 @@
           />
           <span class="p-2 m-1 text-red-800">{{ errors.inputY }}</span>
         </div>
+
         <!-- Input N Direction-->
+
         <div class="w-[30%] h-fit">
           <div class="w-full">
             <label for="inputN">Navigation Direction</label>
@@ -56,7 +61,9 @@
           <span class="p-2 m-1 text-red-800">{{ errors.inputN }}</span>
         </div>
       </div>
+
       <!-- Input input Instructions-->
+
       <div class="p-2 mt-2 w-full">
         <span class="p-2 mt-4 h-16 w-80">Instructions:</span>
         <input
@@ -75,8 +82,11 @@
         />
       </div>
       <span class="p-2 m-1 text-red-800">{{ errors.roverInstructionsModel }}</span>
+
       <div class="p-2 m-0 h-16 w-80">Final Position:{{ finalPosition }}</div>
+
       <!-- Submit button-->
+
       <button
         :disabled="isDisabled"
         @click.prevent="validateForm"
@@ -90,9 +100,6 @@
 
 <script setup>
 import { ref, computed, watch, reactive } from 'vue';
-
-//import ButtonBaseComponent from '@/components/ButtonBaseComponent.vue';
-//import InputBaseComponent from './InputBaseComponent.vue';
 
 // PROPS
 const props = defineProps({
@@ -122,18 +129,23 @@ const props = defineProps({
     type: String
   }
 });
-const finalPosition = ref(null);
-const movingPosition = ref(null);
 
+/*
+// V Models Input Received from Props
+*/
 const inputX = ref(props.landingPositionX);
-
+const roverInstructionsModel = ref(props.instructionsPosition);
 const inputY = ref(props.landingPositionY);
 const inputN = ref(props.landingPositionN);
+
 const classFromParent = ref(props.class);
 const maxlength = 15;
 const nameModel = ref(props.name);
 
-const roverInstructionsModel = ref(props.instructionsPosition);
+/*
+// Validation logic
+*/
+
 const errors = reactive({});
 const validateField = (id, field) => {
   if (field === '') {
@@ -202,6 +214,16 @@ watch(inputN, (newValue) => {
   validateDirection(newValue);
 });
 
+/*
+// Logic To calculate the Final Position
+*/
+const finalPosition = ref(null);
+const movingPosition = ref(null);
+
+const computedArrayDirection = computed(() => {
+  return [inputX.value, inputY.value, inputN.value];
+});
+
 // Get the Direction of the Rover
 
 const createArrayFromInstructionString = (instructionsString) => {
@@ -210,18 +232,8 @@ const createArrayFromInstructionString = (instructionsString) => {
   return stringToArray.split('');
 };
 
-// Computed Direction
-const computedDirection = computed(() => {
-  if (finalPosition.value !== null) {
-    return finalPosition.value[2];
-  } else {
-    return computedArrayDirection.value[2];
-  }
-});
-const computedArrayDirection = computed(() => {
-  return [inputX.value, inputY.value, inputN.value];
-});
-//const  = computedDirection;
+// Get the string and turn it to a number to calculate the direction further in the logic
+
 const directionToNumber = (directionString) => {
   switch (directionString) {
     case 'N':
@@ -236,12 +248,19 @@ const directionToNumber = (directionString) => {
       return 0;
   }
 };
+
 let directionNumber = ref(directionToNumber(computedArrayDirection.value[2]));
+
+// Reset all variables when the Landing position of direction changes
+
 const resetFinalPosition = () => {
   directionNumber.value = directionToNumber(computedArrayDirection.value[2]);
   finalPosition.value = null;
   movingPosition.value = null;
 };
+
+// Calculate of rover direction, thinking it will never be 360 and never below 0 and so
+// it can match E,W,S,N
 
 const calculateDirection = (inputString) => {
   let tempNumber;
@@ -275,6 +294,7 @@ const calculateDirection = (inputString) => {
       return 'N';
   }
 };
+// Calculate the distance it has moved forward
 const calculateMovingForward = (directionString) => {
   switch (directionString) {
     case 'N':
@@ -289,6 +309,7 @@ const calculateMovingForward = (directionString) => {
       return [0, 0, 'N'];
   }
 };
+// update position is basically a math operation between old and new positions
 
 const updatePositions = (oldPosition, newPosition) => {
   if (oldPosition === null) {
@@ -309,6 +330,10 @@ const updatePositions = (oldPosition, newPosition) => {
 
   return result;
 };
+/*
+//  Final position runs a foreach over the instructions array and runs a function depending on the directio
+// and movement
+*/
 
 const getFinalPosition = (instructionsStringArray) => {
   let currentDirection;
