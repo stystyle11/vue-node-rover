@@ -1,7 +1,10 @@
 <template>
   <div :class="classFromParent">
     <h1 class="p-4 m-4 h-16 w-80">Rover Panel:{{ nameModel }}</h1>
-
+    <h1 class="p-4 m-4 h-16 w-80">Direction Number:{{ directionNumber }}</h1>
+    <h1 class="p-4 m-4 h-16 w-80">Direction:{{}}</h1>
+    <h1 class="p-4 m-4 h-16 w-80">ComputedDirection:{{ computedDirection }}</h1>
+    <h1 class="p-4 m-4 h-16 w-80">ComputedArrayDirection:{{ computedArrayDirection }}</h1>
     <form class="w-fit h-fit border-2 border-white-600 rounded-md p-12 m-12 bg-blue-900">
       <div class="flex space-x-4 p-2 mt-2 w-full mb-2 h-28">
         <!-- inputX-->
@@ -14,7 +17,7 @@
             type="number"
             class="w-full p-2 border border-gray-300"
             @blur="
-              resetFinalPosition(direction);
+              resetFinalPosition();
               validateField('inputX', inputX);
             "
           />
@@ -30,7 +33,7 @@
             type="number"
             class="w-full p-2 border border-gray-300"
             @blur="
-              resetFinalPosition(direction);
+              resetFinalPosition();
               validateField('inputY', inputY);
             "
           />
@@ -48,7 +51,7 @@
               type="text"
               class="w-full p-2 border border-gray-300"
               @blur="
-                resetFinalPosition(direction);
+                resetFinalPosition();
                 validateField('inputN', inputN);
               "
             />
@@ -67,9 +70,9 @@
           :placeholder="placeholder"
           :maxlength="maxlength"
           :disabled="false"
-          :autofocus="true"
+          :autofocus="false"
           @blur="
-            resetFinalPosition(direction);
+            resetFinalPosition();
             validateField('roverInstructionsModel', roverInstructionsModel);
           "
         />
@@ -133,19 +136,18 @@ const classFromParent = ref(props.class);
 const maxlength = 15;
 const nameModel = ref(props.name);
 
-//const landingPositionModel = ref(props.landingPosition);
 const roverInstructionsModel = ref(props.instructionsPosition);
 const msg = ref({
   instructions: '',
-  direction: '',
+  directioneee: '',
   axis: ''
 });
 const errors = reactive({});
 const validateField = (id, field) => {
   if (field === '') {
-    errors[id] = 'This field cannot be empty my man.';
+    errors[id] = 'This field cannot be empty.';
   } else {
-    errors[id] = ''; // Clear error if valid
+    errors[id] = '';
   }
 };
 const validateErrorMessages = () => {
@@ -157,7 +159,9 @@ const modelsToBeChecked = [inputX, inputY, inputN, roverInstructionsModel];
 const validateVmodelsNotEmpty = () => {
   return modelsToBeChecked.every((variable) => variable.value !== '');
 };
+
 const isDisabled = ref(false);
+
 const validateForm = () => {
   let noErrors = validateErrorMessages();
   let noEmptyInputs = validateVmodelsNotEmpty();
@@ -219,7 +223,7 @@ const computedDirection = computed(() => {
 const computedArrayDirection = computed(() => {
   return [inputX.value, inputY.value, inputN.value];
 });
-const direction = computedDirection;
+//const  = computedDirection;
 const directionToNumber = (directionString) => {
   switch (directionString) {
     case 'N':
@@ -234,9 +238,9 @@ const directionToNumber = (directionString) => {
       return 0;
   }
 };
-let directionNumber = ref(directionToNumber(direction));
-const resetFinalPosition = (direction) => {
-  directionNumber.value = directionToNumber(direction);
+let directionNumber = ref(directionToNumber(computedArrayDirection.value[2]));
+const resetFinalPosition = () => {
+  directionNumber.value = directionToNumber(computedArrayDirection.value[2]);
   finalPosition.value = null;
   movingPosition.value = null;
 };
