@@ -1,10 +1,7 @@
 <template>
   <div :class="classFromParent">
     <h1 class="p-4 m-4 h-16 w-80">Rover Panel:{{ nameModel }}</h1>
-    <h1 class="p-4 m-4 h-16 w-80">Direction Number:{{ directionNumber }}</h1>
-    <h1 class="p-4 m-4 h-16 w-80">Direction:{{}}</h1>
-    <h1 class="p-4 m-4 h-16 w-80">ComputedDirection:{{ computedDirection }}</h1>
-    <h1 class="p-4 m-4 h-16 w-80">ComputedArrayDirection:{{ computedArrayDirection }}</h1>
+
     <form class="w-fit h-fit border-2 border-white-600 rounded-md p-12 m-12 bg-blue-900">
       <div class="flex space-x-4 p-2 mt-2 w-full mb-2 h-28">
         <!-- inputX-->
@@ -137,11 +134,6 @@ const maxlength = 15;
 const nameModel = ref(props.name);
 
 const roverInstructionsModel = ref(props.instructionsPosition);
-const msg = ref({
-  instructions: '',
-  directioneee: '',
-  axis: ''
-});
 const errors = reactive({});
 const validateField = (id, field) => {
   if (field === '') {
@@ -151,22 +143,28 @@ const validateField = (id, field) => {
   }
 };
 const validateErrorMessages = () => {
-  return Object.values(msg.value).every((value) => value === '');
+  return Object.values(errors).every(
+    (value) => value === '' || value === null || value === undefined
+  );
 };
 
 const modelsToBeChecked = [inputX, inputY, inputN, roverInstructionsModel];
-
+const idsToBeChecked = ['inputX', 'inputY', 'inputN', 'roverInstructionsModel'];
 const validateVmodelsNotEmpty = () => {
-  return modelsToBeChecked.every((variable) => variable.value !== '');
+  modelsToBeChecked.map((item, index) => {
+    if (index < idsToBeChecked.length) {
+      validateField(idsToBeChecked[index], item.value);
+    }
+  });
 };
 
 const isDisabled = ref(false);
 
 const validateForm = () => {
+  validateVmodelsNotEmpty();
   let noErrors = validateErrorMessages();
-  let noEmptyInputs = validateVmodelsNotEmpty();
 
-  if (noErrors && noEmptyInputs) {
+  if (noErrors) {
     getFinalPosition(roverInstructionsModel.value);
   }
 };
