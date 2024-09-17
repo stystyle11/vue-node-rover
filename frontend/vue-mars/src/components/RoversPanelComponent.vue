@@ -1,19 +1,8 @@
 <template>
   <div :class="classFromParent">
-    <button
-      class="w-fit h-fit border-2 border-white-600 rounded-md p-1 m-1 bg-blue-900"
-      @click="getFinalPosition(roverInstructionsModel)"
-      >mama</button
-    >
-    computed:{{ computedArrayDirection }} final:{{ finalPosition }}direction:{{
-      direction
-    }}
-    directionNUMBER :{{ directionNumber }}
     <h1 class="p-4 m-4 h-16 w-80">Rover Panel:{{ nameModel }}</h1>
 
-    <form
-      class="w-fit h-fit border-2 border-white-600 rounded-md p-12 m-12 bg-blue-900"
-    >
+    <form class="w-fit h-fit border-2 border-white-600 rounded-md p-12 m-12 bg-blue-900">
       <div class="flex space-x-4 p-2 mt-2 w-full mb-2 h-28">
         <!-- inputX-->
         <div class="w-[30%] h-fit">
@@ -58,16 +47,20 @@
               placeholder="ex: N or S"
               type="text"
               class="w-full p-2 border border-gray-300"
-              @blur="resetFinalPosition(direction)"
+              @blur="
+                resetFinalPosition(direction);
+                validateField('inputN', inputN);
+              "
             />
           </div>
-          <span class="h-10 min-w-full text-red-800">{{ msg.direction }}</span>
+          <span class="p-2 m-1 text-red-800">{{ errors.inputN }}</span>
         </div>
       </div>
       <!-- Input input Instructions-->
       <div class="p-2 mt-2 w-full">
         <span class="p-2 mt-4 h-16 w-80">Instructions:</span>
         <input
+          id="roverInstructionsModel"
           class="w-full p-2 border border-gray-300 mt-2"
           v-model="roverInstructionsModel"
           type="text"
@@ -75,18 +68,22 @@
           :maxlength="maxlength"
           :disabled="false"
           :autofocus="true"
-          @change="resetFinalPosition(direction)"
+          @blur="
+            resetFinalPosition(direction);
+            validateField('roverInstructionsModel', roverInstructionsModel);
+          "
         />
       </div>
-      <span class="p-2 m-1 text-red-800">{{ msg.instructions }}</span>
-      <div class="p-2 m-0 h-16 w-80"> Final Position:{{ finalPosition }}</div>
+      <span class="p-2 m-1 text-red-800">{{ errors.roverInstructionsModel }}</span>
+      <div class="p-2 m-0 h-16 w-80">Final Position:{{ finalPosition }}</div>
       <!-- Submit button-->
       <button
         :disabled="isDisabled"
         @click.prevent="validateForm"
         class="border border-gray-300 p-2 m-2 h-fit w-80"
-        >Submit</button
       >
+        Submit
+      </button>
     </form>
   </div>
 </template>
@@ -95,46 +92,40 @@
 import { ref, computed, watch, reactive } from 'vue';
 
 //import ButtonBaseComponent from '@/components/ButtonBaseComponent.vue';
-import InputBaseComponent from './InputBaseComponent.vue';
+//import InputBaseComponent from './InputBaseComponent.vue';
 
 // PROPS
 const props = defineProps({
   name: {
     type: String,
-    required: true,
+    required: true
   },
   placeholder: {
-    type: String,
+    type: String
   },
 
   landingPositionX: {
     type: Number,
-    default: 0,
+    default: 0
   },
   landingPositionY: {
     type: Number,
-    default: 0,
+    default: 0
   },
   landingPositionN: {
-    type: String,
+    type: String
   },
   class: {
-    type: String,
+    type: String
   },
   instructionsPosition: {
-    type: String,
-  },
+    type: String
+  }
 });
 const finalPosition = ref(null);
 const movingPosition = ref(null);
-const classToChild = ref('w-full p-2 border border-gray-300');
-const placeholderX = ref('ex: 1, 11, 112');
-const labelX = ref('Input X');
+
 const inputX = ref(props.landingPositionX);
-const handleEmissionInputX = (payload) => {
-  if (payload.value) inputX.value = payload.value ?? 0;
-  resetFinalPosition();
-};
 
 const inputY = ref(props.landingPositionY);
 const inputN = ref(props.landingPositionN);
@@ -147,7 +138,7 @@ const roverInstructionsModel = ref(props.instructionsPosition);
 const msg = ref({
   instructions: '',
   direction: '',
-  axis: '',
+  axis: ''
 });
 const errors = reactive({});
 const validateField = (id, field) => {
@@ -170,24 +161,23 @@ const isDisabled = ref(false);
 const validateForm = () => {
   let noErrors = validateErrorMessages();
   let noEmptyInputs = validateVmodelsNotEmpty();
+
   if (noErrors && noEmptyInputs) {
     getFinalPosition(roverInstructionsModel.value);
   }
 };
 
 const validateInstructions = (value) => {
-  // Check if the value contains only "L", "R", and "M"
   if (!/^[LRM]+$/.test(value)) {
-    msg.value.instructions = 'Only "L", "R", or "M" are allowed';
-    return; // Exit early if invalid characters are found
+    errors.roverInstructionsModel = 'Only "L", "R", or "M" are allowed';
+
+    return;
   }
 
-  // Check if the value does not contain "M"
   if (!value.includes('M')) {
-    msg.value.instructions = 'The Rover needs to move forward (include "M")';
+    errors.roverInstructionsModel = 'The Rover needs to move forward (include "M")';
   } else {
-    // Clear the error message if the input is valid
-    msg.value.instructions = '';
+    errors.roverInstructionsModel = '';
   }
 };
 
@@ -198,9 +188,9 @@ watch(roverInstructionsModel, (newValue) => {
 });
 const validateDirection = (value) => {
   if (/^[NEWS]+$/.test(value)) {
-    msg.value.direction = '';
+    errors.inputN = '';
   } else {
-    msg.value.direction = `Invalid caracter`;
+    errors.inputN = `Invalid caracter`;
   }
 };
 
@@ -231,7 +221,6 @@ const computedArrayDirection = computed(() => {
 });
 const direction = computedDirection;
 const directionToNumber = (directionString) => {
-  console.log('stribng e', directionString);
   switch (directionString) {
     case 'N':
       return 0;
@@ -254,6 +243,7 @@ const resetFinalPosition = (direction) => {
 
 const calculateDirection = (inputString) => {
   let tempNumber;
+
   if (inputString === 'L') {
     tempNumber = directionNumber.value - 90;
     tempNumber > 270
@@ -324,55 +314,23 @@ const getFinalPosition = (instructionsStringArray) => {
 
   let instructionStringToArray;
 
-  instructionStringToArray = createArrayFromInstructionString(
-    instructionsStringArray,
-  );
+  instructionStringToArray = createArrayFromInstructionString(instructionsStringArray);
 
   instructionStringToArray.forEach((item) => {
     if (item === 'L' || item === 'R') {
       currentDirection = calculateDirection(item);
     } else {
-      currentPosition = calculateMovingForward(
-        currentDirection ?? computedArrayDirection.value[2],
-      );
+      currentPosition = calculateMovingForward(currentDirection ?? computedArrayDirection.value[2]);
 
-      movingPosition.value = updatePositions(
-        movingPosition.value ?? [0, 0, 'N'],
-        currentPosition,
-      );
+      movingPosition.value = updatePositions(movingPosition.value ?? [0, 0, 'N'], currentPosition);
     }
   });
 
   finalPosition.value = updatePositions(
     finalPosition.value ?? computedArrayDirection.value,
-    movingPosition.value,
+    movingPosition.value
   );
 
   movingPosition.value = null;
 };
-
-const handleInput = (model) => {
-  const validInputs = ['L', 'M', 'R'];
-  let inputValue;
-  if (model.value) {
-    inputValue = model.value.toUpperCase();
-  }
-
-  if (!validInputs.includes(inputValue)) {
-    model.value = '';
-  } else {
-    model.value = inputValue;
-    console.log('Valid input:', model.value);
-  }
-};
-
-const onBlur = () => {
-  console.log('Input blurred');
-};
-
-const onFocus = () => {
-  console.log('Input focused');
-};
-
-const handleClick = () => {};
 </script>
