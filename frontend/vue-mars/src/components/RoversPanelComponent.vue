@@ -1,6 +1,6 @@
 <template>
-  <div :class="classFromParent">
-    <h1 class="p-4 m-4 h-16 w-80">Rover Panel:{{ nameModel }}</h1>
+  <div :class="props.class">
+    <h1 class="p-4 m-4 h-16 w-80">Rover Panel:{{ name }}</h1>
 
     <form class="w-fit h-fit border-2 border-white-600 rounded-md p-12 m-12 bg-blue-900">
       <div class="flex space-x-4 p-2 mt-2 w-full mb-2 h-28">
@@ -11,9 +11,9 @@
           <input
             id="inputX"
             v-model="inputX"
-            placeholder="ex:1 ,11 ,112"
-            type="number"
-            class="w-full p-2 border border-gray-300"
+            :placeholder="placeholderX"
+            :type="typeX"
+            :class="inputClass"
             @blur="
               resetFinalPosition();
               validateField('inputX', inputX);
@@ -29,9 +29,9 @@
           <input
             id="inputY"
             v-model="inputY"
-            placeholder="ex:1 ,11 ,112"
-            type="number"
-            class="w-full p-2 border border-gray-300"
+            :placeholder="placeholderY"
+            :type="typeY"
+            :class="inputClass"
             @blur="
               resetFinalPosition();
               validateField('inputY', inputY);
@@ -48,10 +48,10 @@
             <input
               id="inputN"
               v-model="inputN"
-              maxlength="1"
-              placeholder="ex: N or S"
-              type="text"
-              class="w-full p-2 border border-gray-300"
+              :maxlength="maxlengthN"
+              :placeholder="placeholderN"
+              :type="typeN"
+              :class="inputClass"
               @blur="
                 resetFinalPosition();
                 validateField('inputN', inputN);
@@ -70,9 +70,9 @@
           id="roverInstructionsModel"
           class="w-full p-2 border border-gray-300 mt-2"
           v-model="roverInstructionsModel"
-          type="text"
-          :placeholder="placeholder"
-          :maxlength="maxlength"
+          :type="typeInstructions"
+          :placeholder="placeholderInstructions"
+          :maxlength="maxlengthInstructions"
           :disabled="false"
           :autofocus="false"
           @blur="
@@ -107,8 +107,41 @@ const props = defineProps({
     type: String,
     required: true
   },
-  placeholder: {
+  placeholderX: {
     type: String
+  },
+  placeholderY: {
+    type: String
+  },
+  placeholderN: {
+    type: String
+  },
+  placeholderInstructions: {
+    type: String
+  },
+  maxlengthN: {
+    type: Number,
+    default: 1
+  },
+  typeX: {
+    type: String,
+    default: 'number'
+  },
+  typeInstructions: {
+    type: String,
+    default: 'text'
+  },
+  typeY: {
+    type: String,
+    default: 'number'
+  },
+  typeN: {
+    type: String,
+    default: 'text'
+  },
+  maxlengthInstructions: {
+    type: Number,
+    default: 15
   },
 
   landingPositionX: {
@@ -125,6 +158,9 @@ const props = defineProps({
   class: {
     type: String
   },
+  inputClass: {
+    type: String
+  },
   instructionsPosition: {
     type: String
   }
@@ -138,15 +174,12 @@ const roverInstructionsModel = ref(props.instructionsPosition);
 const inputY = ref(props.landingPositionY);
 const inputN = ref(props.landingPositionN);
 
-const classFromParent = ref(props.class);
-const maxlength = 15;
-const nameModel = ref(props.name);
-
 /*
 // Validation logic
 */
 
 const errors = reactive({});
+
 const validateField = (id, field) => {
   if (field === '') {
     errors[id] = 'This field cannot be empty.';
@@ -179,6 +212,7 @@ const validateForm = () => {
 
   // Check Watch function that disables on submit
   validateInstructions(roverInstructionsModel.value);
+  validateDirection(inputN.value);
 
   let noErrors = validateErrorMessages();
 
@@ -206,6 +240,7 @@ watch(roverInstructionsModel, (newValue) => {
 
   validateInstructions(newValue);
 });
+
 const validateDirection = (value) => {
   if (/^[NEWS]+$/.test(value)) {
     errors.inputN = '';

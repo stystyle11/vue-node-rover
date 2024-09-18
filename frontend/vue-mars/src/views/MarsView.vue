@@ -1,7 +1,6 @@
 <template>
   <div class="flex space-x-4">
-    <RoversPanelGenerator :fields="roverGeneratorFields">
-    </RoversPanelGenerator>
+    <RoversPanelGenerator :fields="roverGeneratorFields"> </RoversPanelGenerator>
   </div>
 </template>
 
@@ -11,16 +10,25 @@ import RoversPanelGenerator from '@/components/RoversPanelGeneratorComponent.vue
 const roverGeneratorFields = [
   {
     name: 'Rover1',
-    class: 'w-1/2 p-4 bg-gray-100',
-
+    class: 'w-1/2 p-4 bg-white-900',
     landingPositionX: 0,
     landingPositionY: 0,
     landingPositionN: 'N',
     instructionsPosition: '',
-    placeholder: 'ex: LMLRRM',
+    placeholderX: 'ex:1 ,11, 111',
+    placeholderY: 'ex:1 ,11, 111',
+    placeholderN: 'ex:E',
+    placeholderInstructions: 'ex:LMLRRM',
+    typeX: 'number',
+    typeY: 'number',
+    typeN: 'text',
+    typeInstructions: 'text',
+    maxlengthN: 1,
+    maxlengthInstructions: 15,
     labelRoverInstructions: 'Rover Instructions',
     labelLandingPosition: 'Landing Position',
-    component: 'roverPanel',
+    inputClass: 'w-full p-2 border border-gray-300 mt-2',
+    component: 'roverPanel'
   },
   {
     name: 'Rover2',
@@ -28,11 +36,21 @@ const roverGeneratorFields = [
     landingPositionX: 0,
     landingPositionY: 0,
     landingPositionN: 'N',
-    instructionsPosition: 'LM',
-    placeholder: 'ex:LMLRRM',
+    instructionsPosition: '',
+    placeholderX: 'ex:1 ,11, 111',
+    placeholderY: 'ex:1 ,11, 111',
+    placeholderN: 'ex:E',
+    placeholderInstructions: 'ex:LMLRRM',
+    typeX: 'number',
+    typeY: 'number',
+    typeN: 'text',
+    typeInstructions: 'text',
+    maxlengthN: 1,
+    maxlengthInstructions: 15,
     labelRoverInstructions: 'Rover Instructions',
     labelLandingPosition: 'Landing Position',
-    component: 'roverPanel',
-  },
+    inputClass: 'w-full p-2 border border-gray-300 mt-2',
+    component: 'roverPanel'
+  }
 ];
 </script>
