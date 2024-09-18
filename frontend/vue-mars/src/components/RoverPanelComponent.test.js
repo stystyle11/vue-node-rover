@@ -15,7 +15,7 @@ describe('RoversPanelComponent', () => {
       }
     });
 
-    expect(wrapper.text()).toContain('Rover Panel:Test Rover');
+    expect(wrapper.text()).toContain("Rover's Name:Test Rover");
     expect(wrapper.find('#inputX').exists()).toBe(true);
     expect(wrapper.find('#inputY').exists()).toBe(true);
     expect(wrapper.find('#inputN').exists()).toBe(true);
