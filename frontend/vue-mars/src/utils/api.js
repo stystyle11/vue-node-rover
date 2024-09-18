@@ -1,4 +1,7 @@
-async function apiCall(url, method = 'GET', body = null, headers = {}) {
+const API_BASE_URL = 'http://localhost:3000';
+
+// Base API call
+async function apiCall(endpoint, method = 'GET', body = null, headers = {}) {
   try {
     const config = {
       method,
@@ -12,7 +15,7 @@ async function apiCall(url, method = 'GET', body = null, headers = {}) {
       config.body = JSON.stringify(body);
     }
 
-    const response = await fetch(url, config);
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
 
     if (!response.ok) {
       throw new Error(`API call failed with status ${response.status}`);
@@ -25,8 +28,5 @@ async function apiCall(url, method = 'GET', body = null, headers = {}) {
   }
 }
 
-// GET request
-export const get = (url, headers = {}) => apiCall(url, 'GET', null, headers);
-
 // POST request
-export const post = (url, body, headers = {}) => apiCall(url, 'POST', body, headers);
+export const post = (endpoint, body, headers = {}) => apiCall(endpoint, 'POST', body, headers);

@@ -1,13 +1,13 @@
 export class Position {
-  constructor(inputX, inputY, inputN) {
-    this.inputX = inputX;
-    this.inputY = inputY;
-    this.inputN = inputN;
+  constructor(x, y, direction) {
+    this.x = x;
+    this.y = y;
+    this.direction = direction;
   }
 
   // Validate the model before sending it to the API
   validate() {
-    if (!this.inputX || !this.inputY || !this.inputN) {
+    if (!this.x === '' || !this.y === '' || !this.direction === '') {
       throw new Error('All fields are required');
     }
   }

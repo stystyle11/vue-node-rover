@@ -115,13 +115,15 @@
       >
         Submit
       </button>
+      <span :class="spanClass">{{ errors.apiError }}</span>
     </form>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, watch, reactive } from 'vue';
-
+import { post } from '@/utils/api';
+import { Position } from '@/models/Position';
 // PROPS
 const props = defineProps({
   name: {
@@ -200,6 +202,27 @@ const inputY = ref(props.landingPositionY);
 const inputN = ref(props.landingPositionN);
 
 /*
+// Api Post Request
+*/
+
+const roverId = props.name + 'ewas';
+const sendPosition = async () => {
+  try {
+    const newPosition = new Position(
+      finalPosition.value[0],
+      finalPosition.value[1],
+      finalPosition.value[2]
+    );
+
+    newPosition.validate();
+
+    await post(`/rovers/${roverId}/positions`, newPosition);
+  } catch (err) {
+    errors.apiError = err.message;
+  }
+};
+
+/*
 // Validation logic
 */
 
@@ -243,6 +266,7 @@ const validateForm = () => {
 
   if (noErrors) {
     getFinalPosition(roverInstructionsModel.value);
+    //sendPosition();
   }
 };
 

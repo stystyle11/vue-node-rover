@@ -6,6 +6,8 @@ WORKDIR /app
 
 # Copy package.json and package-lock.json
 COPY --chown=node:node package*.json ./
+#COPY --chown=node:node postcss.config.js ./
+#COPY --chown=node:node . .
 
 # Install dependencies
 RUN npm ci
