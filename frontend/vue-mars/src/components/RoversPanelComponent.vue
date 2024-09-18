@@ -122,8 +122,8 @@
 
 <script setup>
 import { ref, computed, watch, reactive } from 'vue';
-import { post } from '@/utils/api';
-import { Position } from '@/models/Position';
+//import { post } from '@/utils/api';
+//import { Position } from '@/models/Position';
 // PROPS
 const props = defineProps({
   name: {
@@ -205,6 +205,7 @@ const inputN = ref(props.landingPositionN);
 // Api Post Request
 */
 
+/*
 const roverId = props.name + 'ewas';
 const sendPosition = async () => {
   try {

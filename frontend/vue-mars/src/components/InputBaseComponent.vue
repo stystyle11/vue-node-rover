@@ -57,6 +57,7 @@ const props = defineProps({
 const getValueFromParent = ref(props.modelValueFromParent);
 const classFromParent = ref(props.class);
 const emit = defineEmits(['updateModelValue', 'blur', 'focus']);
+
 // A method to emit an event
 function emitEvent() {
   emit('updateModelValue', getValueFromParent);
