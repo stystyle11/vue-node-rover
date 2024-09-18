@@ -1,16 +1,26 @@
 <template>
-  <div class="flex flex-wrap justify-start items-end w-full pt-8">
+  <div class="block md:flex md:space-x-4 p-2 mt-2 mb-2 h-fit w-full justify-start items-end pt-8">
     <component
       v-for="field in fields"
       :key="field.name"
       :name="field.name"
       :class="field.class"
-      :is="renderComponentsArray[field.component]"
       :landingPositionX="field.landingPositionX"
       :landingPositionY="field.landingPositionY"
       :landingPositionN="field.landingPositionN"
       :instructionsPosition="field.instructionsPosition"
-      :placeholder="field.placeholder"
+      :placeholderX="field.placeholderX"
+      :placeholderY="field.placeholderY"
+      :placeholderN="field.placeholderN"
+      :placeholderInstructions="field.placeholderInstructions"
+      :typeX="field.typeX"
+      :typeY="field.typeY"
+      :typeN="field.typeN"
+      :typeInstructions="field.typeInstructions"
+      :maxlengthN="field.maxlengthN"
+      :maxlengthInstructions="field.maxlengthInstructions"
+      :spanClass="field.spanClass"
+      :is="renderComponentsArray[field.component]"
     />
   </div>
 </template>
@@ -20,14 +30,12 @@ import { defineAsyncComponent } from 'vue';
 defineProps({
   fields: {
     type: Array,
-    required: true,
-  },
+    required: true
+  }
 });
 
 const renderComponentsArray = {
-  roverPanel: defineAsyncComponent(
-    () => import('@/components/RoversPanelComponent.vue'),
-  ),
+  roverPanel: defineAsyncComponent(() => import('@/components/RoversPanelComponent.vue'))
 };
 </script>
 <style scoped>

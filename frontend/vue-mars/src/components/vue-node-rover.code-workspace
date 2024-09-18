@@ -1,9 +1,10 @@
 {
   "folders": [
-	{
-		"name": "vue-node-rover",
-		"path": "../../../.."
-	}
-],
+    {
+      "name": "vue-node-rover",
+      "path": "../../../.."
+    }
+  ],
   "settings": {}
 }
+

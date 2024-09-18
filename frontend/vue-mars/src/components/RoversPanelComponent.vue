@@ -1,74 +1,95 @@
 <template>
-  <div :class="props.class">
-    <h1 class="p-4 m-4 h-16 w-80">Rover Panel:{{ name }}</h1>
-
-    <form class="w-fit h-fit border-2 border-white-600 rounded-md p-12 m-12 bg-blue-900">
-      <div class="flex space-x-4 p-2 mt-2 w-full mb-2 h-28">
+  <div class="w-full md:w-1/2">
+    <form
+      class="w-fit p-0 m-4 md:w-[90%] md:p-4 h-fit border-2 border-white-600 rounded-md bg-blue-900"
+    >
+      <h1 class="p-4 m-1 h-16 w-80 from-neutral-200 text-white">Rover's Name:{{ name }}</h1>
+      <div class="block md:flex md:space-x-4 p-2 mt-2 w-full sm:w-full mb-2 h-fit">
         <!-- inputX-->
 
-        <div class="w-[30%] h-fit">
-          <label for="inputX">Input X:</label>
+        <div class="w-full md:w-[30%] h-22">
+          <label
+            class="p-1 from-neutral-200 text-white"
+            for="inputX"
+            >Input X:</label
+          >
           <input
             id="inputX"
             v-model="inputX"
             :placeholder="placeholderX"
             :type="typeX"
-            :class="inputClass"
+            class="w-full p-1 border-2 text-center placeholder:text-xs"
             @blur="
               resetFinalPosition();
               validateField('inputX', inputX);
             "
           />
-          <span class="p-2 m-1 text-red-800">{{ errors.inputX }}</span>
+          <div class="w-full">
+            <span :class="spanClass">{{ errors.inputX }}</span>
+          </div>
         </div>
 
         <!-- Input Y-->
 
-        <div class="w-[30%] h-fit">
-          <label for="inputY">Input Y:</label>
+        <div class="w-full md:w-[30%] h-22">
+          <label
+            class="p-1 from-neutral-200 text-white"
+            for="inputY"
+            >Input Y:</label
+          >
           <input
             id="inputY"
             v-model="inputY"
             :placeholder="placeholderY"
             :type="typeY"
-            :class="inputClass"
+            class="w-full p-1 border-2 text-center placeholder:text-xs"
             @blur="
               resetFinalPosition();
               validateField('inputY', inputY);
             "
           />
-          <span class="p-2 m-1 text-red-800">{{ errors.inputY }}</span>
+          <div class="w-full">
+            <span :class="spanClass">{{ errors.inputY }}</span>
+          </div>
         </div>
 
         <!-- Input N Direction-->
 
-        <div class="w-[30%] h-fit">
+        <div class="w-full md:w-[30%] h-22">
+          <label
+            class="p-1 from-neutral-200 text-white"
+            for="inputN"
+            >Direction:</label
+          >
+          <input
+            id="inputN"
+            v-model="inputN"
+            :maxlength="maxlengthN"
+            :placeholder="placeholderN"
+            :type="typeN"
+            class="w-full p-1 border-2 text-center placeholder:text-xs md:w-[80%]"
+            @blur="
+              resetFinalPosition();
+              validateField('inputN', inputN);
+            "
+          />
           <div class="w-full">
-            <label for="inputN">Navigation Direction</label>
-            <input
-              id="inputN"
-              v-model="inputN"
-              :maxlength="maxlengthN"
-              :placeholder="placeholderN"
-              :type="typeN"
-              :class="inputClass"
-              @blur="
-                resetFinalPosition();
-                validateField('inputN', inputN);
-              "
-            />
+            <span :class="spanClass">{{ errors.inputN }}</span>
           </div>
-          <span class="p-2 m-1 text-red-800">{{ errors.inputN }}</span>
         </div>
       </div>
 
       <!-- Input input Instructions-->
 
-      <div class="p-2 mt-2 w-full">
-        <span class="p-2 mt-4 h-16 w-80">Instructions:</span>
+      <div class="p-2 mt-2 w-full min-h-36">
+        <label
+          class="p-1 from-neutral-200 text-white"
+          for="inputN"
+          >Moving Instructions:</label
+        >
         <input
           id="roverInstructionsModel"
-          class="w-full p-2 border border-gray-300 mt-2"
+          class="w-full p-2 border border-gray-300 mt-2 placeholder:text-xs"
           v-model="roverInstructionsModel"
           :type="typeInstructions"
           :placeholder="placeholderInstructions"
@@ -80,17 +101,17 @@
             validateField('roverInstructionsModel', roverInstructionsModel);
           "
         />
+        <span :class="spanClass">{{ errors.roverInstructionsModel }}</span>
       </div>
-      <span class="p-2 m-1 text-red-800">{{ errors.roverInstructionsModel }}</span>
 
-      <div class="p-2 m-0 h-16 w-80">Final Position:{{ finalPosition }}</div>
+      <div class="p-2 mb-4 w-full text-white">Final Position:{{ finalPosition }}</div>
 
       <!-- Submit button-->
 
       <button
         :disabled="isDisabled"
         @click.prevent="validateForm"
-        class="border border-gray-300 p-2 m-2 h-fit w-80"
+        class="border border-white p-2 m-8 h-fit w-[90%] md:w-1/2 lg:w-1/2 mx-auto block"
       >
         Submit
       </button>
@@ -107,6 +128,10 @@ const props = defineProps({
     type: String,
     required: true
   },
+  spanClass: {
+    type: String
+  },
+
   placeholderX: {
     type: String
   },
@@ -182,7 +207,7 @@ const errors = reactive({});
 
 const validateField = (id, field) => {
   if (field === '') {
-    errors[id] = 'This field cannot be empty.';
+    errors[id] = 'Field is empty!';
   } else {
     errors[id] = '';
   }

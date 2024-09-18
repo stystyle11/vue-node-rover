@@ -40,17 +40,17 @@ describe('RoversPanelComponent', () => {
     await inputX.setValue('');
     await inputX.trigger('blur');
     await wrapper.vm.$nextTick();
-    expect(wrapper.text()).toContain('This field cannot be empty.');
+    expect(wrapper.text()).toContain('Field is empty!');
 
     await inputY.setValue('');
     await inputY.trigger('blur');
     await wrapper.vm.$nextTick();
-    expect(wrapper.text()).toContain('This field cannot be empty.');
+    expect(wrapper.text()).toContain('Field is empty!');
 
     await inputN.setValue('');
     await inputN.trigger('blur');
     await wrapper.vm.$nextTick();
-    expect(wrapper.text()).toContain('This field cannot be empty.');
+    expect(wrapper.text()).toContain('Field is empty!');
   });
 
   it('submits the form with valid data', async () => {
