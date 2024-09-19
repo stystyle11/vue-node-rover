@@ -5,12 +5,11 @@ class PositionController {
   static async createPosition(req, res) {
     try {
       const { x, y, direction } = req.body;
-      const { rover_name } = req.params;
+      //const { rover_name } = req.params;
       const positionId = await Position.create({
         x,
         y,
-        direction,
-        rover_name
+        direction
       });
       res.status(201).json({ id: positionId, message: 'Position created successfully' });
     } catch (error) {

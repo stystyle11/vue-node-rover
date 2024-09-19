@@ -1,12 +1,12 @@
 import pool from '../../db.js';
 
 class Position {
-  static async create({ coordinate_x, coordinate_y, position_facing, rover_id }) {
+  static async create({ x, y, direction }) {
     const sql = `
-      INSERT INTO positions (coordinate_x, coordinate_y, position_facing, rover_id) 
-      VALUES (?, ?, ?, ?)
+      INSERT INTO positions (coordinate_x, coordinate_y, position_facing) 
+      VALUES (?, ?, ?)
     `;
-    const [result] = await pool.execute(sql, [coordinate_x, coordinate_y, position_facing, rover_id]);
+    const [result] = await pool.execute(sql, [x, y, direction]);
     return result.insertId;
   }
 

@@ -10,14 +10,9 @@ const router = Router();
  */
 
 router.post(
-  '/positions/:rover_id/positions',
+  '/positions',
 
-  [
-    param('rover_id').isString(),
-    body('x').isInt(),
-    body('y').isInt(),
-    body('direction').isString().notEmpty()
-  ],
+  [body('x').isInt(), body('y').isInt(), body('direction').isString().notEmpty()],
   validate,
 
   PositionController.createPosition

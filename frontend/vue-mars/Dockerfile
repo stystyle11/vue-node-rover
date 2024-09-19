@@ -22,4 +22,4 @@ COPY . .
 EXPOSE 5173
 
 # Serve the built app with Vite preview
-CMD ["npm", "run", "build"]
+CMD ["npm", "run", "dev"]

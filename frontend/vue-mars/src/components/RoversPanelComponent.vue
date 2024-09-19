@@ -215,7 +215,7 @@ const sendPosition = async () => {
     );
 
     newPosition.validate();
-    await post(`/positions/${roverName}/positions`, newPosition);
+    await post(`/positions`, newPosition);
   } catch (err) {
     errors.apiError = err.message;
   }
