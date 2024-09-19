@@ -1,13 +1,14 @@
 import express from 'express';
-import { connectToDatabase } from './initializeDatabase.js';
+import cors from 'cors';
+////import { connectToDatabase } from './initializeDatabase.js';
 import roverRoutes from './src/routes/RoverRoutes.js';
 import positionRoutes from './src/routes/PositionRoutes.js';
 
 const app = express();
+app.use(cors());
+app.options('*', cors()); // allow cors for pre flight
 const startServer = async () => {
-
-  await connectToDatabase(); 
- 
+  //await connectToDatabase();
 };
 
 // Middleware to parse JSON requests
@@ -31,4 +32,4 @@ app.listen(port, () => {
 
 // Docker wait for it script is taking too long to debug
 //for Testing purposes this workaround is faster.
-setTimeout(startServer, 15500)
+//setTimeout(startServer, 15500);

@@ -122,8 +122,8 @@
 
 <script setup>
 import { ref, computed, watch, reactive } from 'vue';
-//import { post } from '@/utils/api';
-//import { Position } from '@/models/Position';
+import { post } from '@/utils/api';
+import { Position } from '@/models/Position';
 // PROPS
 const props = defineProps({
   name: {
@@ -205,8 +205,7 @@ const inputN = ref(props.landingPositionN);
 // Api Post Request
 */
 
-/*
-const roverId = props.name + 'ewas';
+const roverName = props.name;
 const sendPosition = async () => {
   try {
     const newPosition = new Position(
@@ -216,8 +215,7 @@ const sendPosition = async () => {
     );
 
     newPosition.validate();
-
-    await post(`/rovers/${roverId}/positions`, newPosition);
+    await post(`/positions/${roverName}/positions`, newPosition);
   } catch (err) {
     errors.apiError = err.message;
   }
@@ -267,7 +265,7 @@ const validateForm = () => {
 
   if (noErrors) {
     getFinalPosition(roverInstructionsModel.value);
-    //sendPosition();
+    sendPosition();
   }
 };
 

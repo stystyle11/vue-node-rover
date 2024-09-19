@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = 'http://localhost:3000/api';
 
 // Base API call
 async function apiCall(endpoint, method = 'GET', body = null, headers = {}) {

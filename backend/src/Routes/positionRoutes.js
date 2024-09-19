@@ -10,13 +10,13 @@ const router = Router();
  */
 
 router.post(
-  '/rovers/:rover_id/positions',
+  '/positions/:rover_id/positions',
 
   [
-    param('rover_id').isInt(),
-    body('coordinate_x').isInt(),
-    body('coordinate_y').isInt(),
-    body('position_facing').isString().notEmpty()
+    param('rover_id').isString(),
+    body('x').isInt(),
+    body('y').isInt(),
+    body('direction').isString().notEmpty()
   ],
   validate,
 

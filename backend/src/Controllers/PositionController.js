@@ -4,13 +4,13 @@ class PositionController {
   // Create a new position for a specific rover
   static async createPosition(req, res) {
     try {
-      const { coordinate_x, coordinate_y, position_facing } = req.body;
-      const { rover_id } = req.params;
+      const { x, y, direction } = req.body;
+      const { rover_name } = req.params;
       const positionId = await Position.create({
-        coordinate_x,
-        coordinate_y,
-        position_facing,
-        rover_id
+        x,
+        y,
+        direction,
+        rover_name
       });
       res.status(201).json({ id: positionId, message: 'Position created successfully' });
     } catch (error) {
