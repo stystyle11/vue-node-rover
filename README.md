@@ -6,7 +6,7 @@
 
 To get the project up and running locally, you will need to run the following command:
 
-docker-compose up --build
+docker compose up --build
 
 If for some docker issue, the database doesn't load, run the docker command again.
 
